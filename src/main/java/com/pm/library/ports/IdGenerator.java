@@ -1,4 +1,5 @@
 package com.pm.library.ports;
 
-public class IdGenerator {
+public interface IdGenerator {
+    String newId();
 }

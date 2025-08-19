@@ -1,4 +1,8 @@
 package com.pm.library.domain.spec;
 
-public class BookSpecification {
+
+import com.pm.library.domain.Book;
+
+public interface BookSpecification {
+    boolean isSatisfiedBy(Book book);
 }

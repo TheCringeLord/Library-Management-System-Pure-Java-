@@ -1,4 +1,9 @@
 package com.pm.library.ports;
 
-public class ReadableRepository {
+import java.util.List;
+import java.util.Optional;
+
+public interface ReadableRepository<T, ID> {
+    Optional<T> findById(ID id);
+    List<T> findAll();
 }

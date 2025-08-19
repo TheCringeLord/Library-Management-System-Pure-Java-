@@ -1,4 +1,7 @@
 package com.pm.library.ports;
 
-public class Searchable {
+import java.util.List;
+
+public interface Searchable<SPEC, T> {
+    List<T> search(SPEC spec);
 }
