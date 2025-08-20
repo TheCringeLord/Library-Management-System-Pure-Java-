@@ -1,4 +1,9 @@
 package com.pm.library.services.commands;
 
-public class ReturnBookCommand {
+import java.util.Objects;
+
+public record ReturnBookCommand(String title) {
+	public ReturnBookCommand {
+		Objects.requireNonNull(title, "title");
+	}
 }
