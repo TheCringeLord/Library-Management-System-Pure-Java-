@@ -13,10 +13,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class LibraryServiceTest {
     private LibraryService service;
+    private InMemoryBookRepository repo;
 
     @BeforeEach
     void setUp() {
-        var repo = new InMemoryBookRepository();
+    repo = new InMemoryBookRepository();
         var validator = new BookValidator();
         var idGen = new UuidGenerator();
         service = new LibraryService(repo, validator, idGen);
@@ -28,9 +29,14 @@ public class LibraryServiceTest {
         assertTrue(varRes.isOk());
         BookView view = varRes.getValue();
 
-        // borrow then return
-        service.borrow(view.title());
-        service.returnBook(view.title());
+    // borrow then return
+    var borrowRes = service.borrow(view.title());
+    assertTrue(borrowRes.isOk());
+    assertFalse(repo.findByTitle(view.title()).get().isAvailable());
+
+    var returnRes = service.returnBook(view.title());
+    assertTrue(returnRes.isOk());
+    assertTrue(repo.findByTitle(view.title()).get().isAvailable());
     }
 
     @Test
@@ -39,10 +45,13 @@ public class LibraryServiceTest {
         assertTrue(res.isOk());
         BookView view = res.getValue();
 
-        // First borrow
-        service.borrow(view.title());
-        // Second borrow should be no-op (no exception)
-        service.borrow(view.title());
+    // First borrow
+    var first = service.borrow(view.title());
+    assertTrue(first.isOk());
+
+    // Second borrow should return ALREADY_BORROWED
+    var second = service.borrow(view.title());
+    assertTrue(second.isError());
     }
 
     @Test
@@ -51,9 +60,11 @@ public class LibraryServiceTest {
         assertTrue(res.isOk());
         BookView view = res.getValue();
 
-        // Return when available should be no-op
-        service.returnBook(view.title());
-        // Double return
-        service.returnBook(view.title());
+    // Return when available should return ALREADY_RETURNED
+    var first = service.returnBook(view.title());
+    assertTrue(first.isError());
+    // Make sure subsequent return still errors
+    var second = service.returnBook(view.title());
+    assertTrue(second.isError());
     }
 }

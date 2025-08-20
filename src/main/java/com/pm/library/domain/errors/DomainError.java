@@ -18,4 +18,7 @@ public final class DomainError {
 
 	// Generic errors
 	public static final String VALIDATION = "VALIDATION";
+	public static final String NOT_FOUND = "NOT_FOUND";
+	public static final String ALREADY_BORROWED = "ALREADY_BORROWED";
+	public static final String ALREADY_RETURNED = "ALREADY_RETURNED";
 }

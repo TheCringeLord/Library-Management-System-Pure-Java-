@@ -8,6 +8,7 @@ import com.pm.library.services.dto.BookCreateRequest;
 import com.pm.library.services.dto.BookView;
 import com.pm.library.services.dto.Mappers;
 import com.pm.library.shared.Result;
+import com.pm.library.domain.errors.DomainError;
 
 import java.util.List;
 import java.util.Objects;
@@ -38,33 +39,33 @@ public class LibraryService {
         return Result.ok(Mappers.toView(book));
     }
 
-    public void borrow(String title) {
+    public Result<BookView> borrow(String title) {
        Optional<Book> bookOpt = repo.findByTitle(title);
 
-        if (bookOpt.isPresent()) {
-            Book book = bookOpt.get();
-            try {
-                book.borrow();
-                repo.save(book);
-            } catch (IllegalStateException ex) {
-                // already borrowed - no-op for now, could return a Result in future
-            }
-        } else {
-            // not found - no-op for now
-        }
+       if (bookOpt.isEmpty()) return Result.error(DomainError.NOT_FOUND, "Book not found");
+
+       Book book = bookOpt.get();
+       try {
+           book.borrow();
+           repo.save(book);
+           return Result.ok(Mappers.toView(book));
+       } catch (IllegalStateException ex) {
+           return Result.error(DomainError.ALREADY_BORROWED, ex.getMessage());
+       }
     }
 
-    public void returnBook(String title) {
+    public Result<BookView> returnBook(String title) {
         Optional<Book> bookOpt = repo.findByTitle(title);
 
-        if (bookOpt.isPresent()) {
-            Book book = bookOpt.get();
-            try {
-                book.returnBook();
-                repo.save(book);
-            } catch (IllegalStateException ex) {
-                // already returned - no-op
-            }
+        if (bookOpt.isEmpty()) return Result.error(DomainError.NOT_FOUND, "Book not found");
+
+        Book book = bookOpt.get();
+        try {
+            book.returnBook();
+            repo.save(book);
+            return Result.ok(Mappers.toView(book));
+        } catch (IllegalStateException ex) {
+            return Result.error(DomainError.ALREADY_RETURNED, ex.getMessage());
         }
     }
 
