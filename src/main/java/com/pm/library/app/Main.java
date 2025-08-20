@@ -3,14 +3,12 @@ package com.pm.library.app;
 import com.pm.library.services.LibraryService;
 import com.pm.library.services.dto.BookCreateRequest;
  
-import com.pm.library.ui.ConsoleIO;
-import com.pm.library.ui.ConsoleMenu;
 
 public class Main {
     public static void main(String[] args) {
         LibraryService svc = AppConfig.libraryService();
-        ConsoleIO io = new ConsoleIO();
-        ConsoleMenu menu = new ConsoleMenu();
+    com.pm.library.ui.ConsoleIO io = new com.pm.library.ui.SystemConsoleIO();
+    com.pm.library.ui.ConsoleMenu menu = new com.pm.library.ui.ConsoleMenu(io);
 
         while (true) {
             menu.showMain();

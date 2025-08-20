@@ -5,7 +5,11 @@ package com.pm.library.ui;
  * console interactions live here and can be extended later.
  */
 public final class ConsoleMenu {
-	private final ConsoleIO io = new ConsoleIO();
+	private final ConsoleIO io;
+
+	public ConsoleMenu(ConsoleIO io) {
+		this.io = io;
+	}
 
 	public void showMain() {
 		io.println("Library Menu");

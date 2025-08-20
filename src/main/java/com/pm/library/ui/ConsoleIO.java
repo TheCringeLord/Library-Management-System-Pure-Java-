@@ -1,25 +1,10 @@
 package com.pm.library.ui;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-
 /**
- * Minimal console IO abstraction to keep system IO in one place for testing.
+ * Console IO abstraction used by the UI. Implementations may be used to
+ * replace System IO in tests.
  */
-public final class ConsoleIO {
-	private final BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-
-	public void println(String s) {
-		System.out.println(s);
-	}
-
-	public String readLine(String prompt) {
-		try {
-			System.out.print(prompt);
-			return in.readLine();
-		} catch (IOException e) {
-			return null;
-		}
-	}
+public interface ConsoleIO {
+	void println(String s);
+	String readLine(String prompt);
 }

@@ -1,11 +1,13 @@
 package com.pm.library.shared;
 
+import java.util.Objects;
+
 public final class Result<T> {
     private final T value;
-    private final String errorCode;
+    private final ErrorCode errorCode;
     private final String message;
 
-    private Result(T value, String errorCode, String message) {
+    private Result(T value, ErrorCode errorCode, String message) {
         this.value = value;
         this.errorCode = errorCode;
         this.message = message;
@@ -13,10 +15,11 @@ public final class Result<T> {
 
     // Factory methods
     public static <T> Result<T> ok(T value) {
-        return new Result<>(value, null, null);
+        return new Result<>(Objects.requireNonNull(value), null, null);
     }
-    public static <T> Result<T> error(String code, String msg) {
-        return new Result<>(null, code, msg);
+
+    public static <T> Result<T> error(ErrorCode code, String msg) {
+        return new Result<>(null, Objects.requireNonNull(code), msg);
     }
 
     // Query methods
@@ -29,7 +32,7 @@ public final class Result<T> {
         return value;
     }
 
-    public String errorCode() {
+    public ErrorCode errorCode() {
         return errorCode;
     }
 

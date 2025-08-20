@@ -55,6 +55,13 @@ public class LibraryServiceTest {
     }
 
     @Test
+    void borrow_notFound_returnsNotFound() {
+        var r = service.borrow("non-existent-title");
+        assertTrue(r.isError());
+        assertEquals(com.pm.library.shared.ErrorCode.NOT_FOUND, r.errorCode());
+    }
+
+    @Test
     void return_alreadyReturned_noException() {
         Result<BookView> res = service.add(new BookCreateRequest("R", "S"));
         assertTrue(res.isOk());
@@ -66,5 +73,12 @@ public class LibraryServiceTest {
     // Make sure subsequent return still errors
     var second = service.returnBook(view.title());
     assertTrue(second.isError());
+    }
+
+    @Test
+    void return_notFound_returnsNotFound() {
+        var r = service.returnBook("missing");
+        assertTrue(r.isError());
+        assertEquals(com.pm.library.shared.ErrorCode.NOT_FOUND, r.errorCode());
     }
 }
