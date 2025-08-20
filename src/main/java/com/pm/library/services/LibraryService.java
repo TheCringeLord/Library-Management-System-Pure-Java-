@@ -13,8 +13,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import static java.lang.String.join;
-
 public class LibraryService {
     private final BookRepository repo;
     private final IdGenerator idGen;
@@ -53,6 +51,20 @@ public class LibraryService {
             }
         } else {
             // not found - no-op for now
+        }
+    }
+
+    public void returnBook(String title) {
+        Optional<Book> bookOpt = repo.findByTitle(title);
+
+        if (bookOpt.isPresent()) {
+            Book book = bookOpt.get();
+            try {
+                book.returnBook();
+                repo.save(book);
+            } catch (IllegalStateException ex) {
+                // already returned - no-op
+            }
         }
     }
 
