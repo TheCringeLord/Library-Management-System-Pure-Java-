@@ -1,7 +1,5 @@
 package com.pm.library.domain;
 
-import com.pm.library.domain.errors.DomainError;
-
 import java.util.Objects;
 
 public class Book {

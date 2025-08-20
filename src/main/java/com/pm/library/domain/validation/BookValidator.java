@@ -1,6 +1,7 @@
 package com.pm.library.domain.validation;
 
 import com.pm.library.services.dto.BookCreateRequest;
+import com.pm.library.shared.ErrorCode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,29 +12,29 @@ public class BookValidator {
 
     public List<String> validateCreate(BookCreateRequest req){
         List<String> errors = new ArrayList<>();
-        String rawTitle = req.title();
-        String rawAuthor = req.author();
-
-        //Validate Empty
+        // Validate Empty
         if (req == null) {
-            errors.add("REQUEST_NULL");
+            errors.add(ErrorCode.REQUEST_NULL.name());
             return errors;
         }
 
+        String rawTitle = req.title();
+        String rawAuthor = req.author();
+
         if (rawTitle == null || rawTitle.isBlank()) {
-            errors.add("TITLE_REQUIRED");
+            errors.add(ErrorCode.TITLE_REQUIRED.name());
         } else {
             String title = rawTitle.trim();
-            if (title.length() > TITLE_MAX) errors.add("TITLE_LENGTH_INVALID");
-            if (hasControlChars(title)) errors.add("TITLE_CONTAINS_INVALID_CHARACTERS");
+            if (title.length() > TITLE_MAX) errors.add(ErrorCode.TITLE_LENGTH_INVALID.name());
+            if (hasControlChars(title)) errors.add(ErrorCode.TITLE_CONTAINS_INVALID_CHARACTERS.name());
         }
 
         if (rawAuthor == null || rawAuthor.isBlank()) {
-            errors.add("AUTHOR_REQUIRED");
+            errors.add(ErrorCode.AUTHOR_REQUIRED.name());
         } else {
             String author = rawAuthor.trim();
-            if (author.length() > AUTHOR_MAX) errors.add("AUTHOR_LENGTH_INVALID");
-            if (hasControlChars(author)) errors.add("AUTHOR_CONTAINS_INVALID_CHARACTERS");
+            if (author.length() > AUTHOR_MAX) errors.add(ErrorCode.AUTHOR_LENGTH_INVALID.name());
+            if (hasControlChars(author)) errors.add(ErrorCode.AUTHOR_CONTAINS_INVALID_CHARACTERS.name());
         }
 
         return errors;

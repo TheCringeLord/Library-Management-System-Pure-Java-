@@ -8,7 +8,7 @@ import com.pm.library.services.dto.BookCreateRequest;
 import com.pm.library.services.dto.BookView;
 import com.pm.library.services.dto.Mappers;
 import com.pm.library.shared.Result;
-import com.pm.library.domain.errors.DomainError;
+import com.pm.library.shared.ErrorCode;
 
 import java.util.List;
 import java.util.Objects;
@@ -29,7 +29,7 @@ public class LibraryService {
     public Result<BookView> add(BookCreateRequest req) {
         List<String> errors = validator.validateCreate(req);
         if (!errors.isEmpty()) {
-            return Result.error("VALIDATION", String.join(";", errors));
+            return Result.error(ErrorCode.VALIDATION, String.join(";", errors));
         }
 
         String id = idGen.newId();
@@ -42,7 +42,7 @@ public class LibraryService {
     public Result<BookView> borrow(String title) {
        Optional<Book> bookOpt = repo.findByTitle(title);
 
-       if (bookOpt.isEmpty()) return Result.error(DomainError.NOT_FOUND, "Book not found");
+    if (bookOpt.isEmpty()) return Result.error(ErrorCode.NOT_FOUND, "Book not found");
 
        Book book = bookOpt.get();
        try {
@@ -50,14 +50,14 @@ public class LibraryService {
            repo.save(book);
            return Result.ok(Mappers.toView(book));
        } catch (IllegalStateException ex) {
-           return Result.error(DomainError.ALREADY_BORROWED, ex.getMessage());
+           return Result.error(ErrorCode.ALREADY_BORROWED, ex.getMessage());
        }
     }
 
     public Result<BookView> returnBook(String title) {
         Optional<Book> bookOpt = repo.findByTitle(title);
 
-        if (bookOpt.isEmpty()) return Result.error(DomainError.NOT_FOUND, "Book not found");
+    if (bookOpt.isEmpty()) return Result.error(ErrorCode.NOT_FOUND, "Book not found");
 
         Book book = bookOpt.get();
         try {
@@ -65,7 +65,7 @@ public class LibraryService {
             repo.save(book);
             return Result.ok(Mappers.toView(book));
         } catch (IllegalStateException ex) {
-            return Result.error(DomainError.ALREADY_RETURNED, ex.getMessage());
+            return Result.error(ErrorCode.ALREADY_RETURNED, ex.getMessage());
         }
     }
 

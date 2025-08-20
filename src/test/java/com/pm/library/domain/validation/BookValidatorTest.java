@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import com.pm.library.shared.ErrorCode;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class BookValidatorTest {
@@ -16,7 +18,7 @@ public class BookValidatorTest {
 
         assertNotNull(errors, "errors list should not be null");
         assertEquals(1, errors.size(), "expected exactly one error for a null request");
-    assertEquals("REQUEST_NULL", errors.get(0));
+    assertEquals(ErrorCode.REQUEST_NULL.name(), errors.get(0));
     }
 
     @Test
@@ -25,7 +27,7 @@ public class BookValidatorTest {
         List<String> errors = validator.validateCreate(new BookCreateRequest("", "Author"));
         assertNotNull(errors, "errors list should not be null");
         assertEquals(1, errors.size(), "expected exactly one error for a null request");
-    assertEquals("TITLE_REQUIRED", errors.get(0));
+    assertEquals(ErrorCode.TITLE_REQUIRED.name(), errors.getFirst());
     }
 
     @Test
@@ -34,7 +36,7 @@ public class BookValidatorTest {
         List<String> errors = validator.validateCreate(new BookCreateRequest("Title", ""));
         assertNotNull(errors, "errors list should not be null");
         assertEquals(1, errors.size(), "expected exactly one error for a null request");
-    assertEquals("AUTHOR_REQUIRED", errors.get(0));
+    assertEquals(ErrorCode.AUTHOR_REQUIRED.name(), errors.getFirst());
     }
 
     @Test
@@ -46,7 +48,7 @@ public class BookValidatorTest {
 
         assertNotNull(errors, "errors list should not be null");
         assertEquals(1, errors.size(), "expected exactly one error for a too-long title");
-    assertEquals("TITLE_LENGTH_INVALID", errors.get(0));
+    assertEquals(ErrorCode.TITLE_LENGTH_INVALID.name(), errors.getFirst());
     }
 
     @Test
@@ -58,7 +60,7 @@ public class BookValidatorTest {
 
         assertNotNull(errors, "errors list should not be null");
         assertEquals(1, errors.size(), "expected exactly one error for a too-long author");
-    assertEquals("AUTHOR_LENGTH_INVALID", errors.get(0));
+    assertEquals(ErrorCode.AUTHOR_LENGTH_INVALID.name(), errors.getFirst());
     }
 
     @Test
@@ -71,7 +73,7 @@ public class BookValidatorTest {
 
         assertNotNull(errors, "errors list should not be null");
         assertEquals(1, errors.size(), "expected exactly one error for invalid characters");
-    assertEquals("TITLE_CONTAINS_INVALID_CHARACTERS", errors.get(0));
+    assertEquals(ErrorCode.TITLE_CONTAINS_INVALID_CHARACTERS.name(), errors.get(0));
     }
 
     @Test
@@ -91,8 +93,8 @@ public class BookValidatorTest {
 
         assertNotNull(errors);
         assertEquals(2, errors.size(), "expected two errors for blank title and author");
-        assertTrue(errors.contains("TITLE_REQUIRED"));
-        assertTrue(errors.contains("AUTHOR_REQUIRED"));
+    assertTrue(errors.contains(ErrorCode.TITLE_REQUIRED.name()));
+    assertTrue(errors.contains(ErrorCode.AUTHOR_REQUIRED.name()));
     }
 
     @Test
@@ -104,7 +106,7 @@ public class BookValidatorTest {
 
         assertNotNull(errors);
         assertEquals(1, errors.size());
-        assertEquals("AUTHOR_CONTAINS_INVALID_CHARACTERS", errors.get(0));
+    assertEquals(ErrorCode.AUTHOR_CONTAINS_INVALID_CHARACTERS.name(), errors.getFirst());
     }
 
     @Test
@@ -117,8 +119,8 @@ public class BookValidatorTest {
 
         assertNotNull(errors);
         assertEquals(2, errors.size());
-        assertTrue(errors.contains("TITLE_LENGTH_INVALID"));
-        assertTrue(errors.contains("AUTHOR_LENGTH_INVALID"));
+    assertTrue(errors.contains(ErrorCode.TITLE_LENGTH_INVALID.name()));
+    assertTrue(errors.contains(ErrorCode.AUTHOR_LENGTH_INVALID.name()));
     }
 
 }
