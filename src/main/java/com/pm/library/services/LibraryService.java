@@ -11,6 +11,7 @@ import com.pm.library.shared.Result;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import static java.lang.String.join;
 
@@ -37,6 +38,22 @@ public class LibraryService {
         repo.save(book);
 
         return Result.ok(Mappers.toView(book));
+    }
+
+    public void borrow(String title) {
+       Optional<Book> bookOpt = repo.findByTitle(title);
+
+        if (bookOpt.isPresent()) {
+            Book book = bookOpt.get();
+            try {
+                book.borrow();
+                repo.save(book);
+            } catch (IllegalStateException ex) {
+                // already borrowed - no-op for now, could return a Result in future
+            }
+        } else {
+            // not found - no-op for now
+        }
     }
 
 

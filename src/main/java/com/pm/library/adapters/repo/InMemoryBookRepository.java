@@ -23,6 +23,14 @@ public class InMemoryBookRepository implements BookRepository {
     }
 
     @Override
+    public Optional<Book> findByTitle(String title){
+    if (title == null) return Optional.empty();
+    return bookDB.values().stream()
+        .filter(b -> title.equals(b.getTitle()))
+        .findFirst();
+    }
+
+    @Override
     public ArrayList<Book> findAll(){
         return new ArrayList<>(bookDB.values());
     }
